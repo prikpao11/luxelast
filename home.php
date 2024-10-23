@@ -240,10 +240,27 @@ include("php/config.php");
             <!-- Sidebar with checkboxes -->
             <div class="col-md-3">
                 <div class="sidebar">
-                    <h4>ประเภทสินค้า</h4>
-                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#filterModal">
-                        Filter
-                    </button>
+                    <form method="GET" action="">
+                        <h4>ประเภทสินค้า</h4>
+                        <?php
+                        // Fetch categories
+                        $query_categories = mysqli_query($con, "SELECT * FROM product_type");
+                        if ($query_categories) {
+                            while ($category = mysqli_fetch_assoc($query_categories)) {
+                                $pt_id = htmlspecialchars($category['pt_id']);
+                                $pt_name = htmlspecialchars($category['pt_name']);
+                                // Initialize $pt as an array if it's not set
+                                $pt = isset($_GET['pt']) ? $_GET['pt'] : [];
+                                $checked = in_array($pt_id, $pt) ? "checked" : "";
+                                echo "<div class='form-check'>
+                                        <input class='form-check-input' type='checkbox' name='pt[]' value='$pt_id' id='pt_$pt_id' $checked>
+                                        <label class='form-check-label' for='pt_$pt_id'>$pt_name</label>
+                                      </div>";
+                            }
+                        }
+                        ?>
+                        <button type="submit" class="btn btn-primary">Filter</button>
+                    </form>
                 </div>
             </div>
 
